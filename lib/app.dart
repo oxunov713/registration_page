@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'pages/home_page/home_page.dart';
+import 'pages/login_option/login_option.dart';
+
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -8,7 +9,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: HomePage(),
+      home: LoginOption(),
       debugShowCheckedModeBanner: false,
     );
   }

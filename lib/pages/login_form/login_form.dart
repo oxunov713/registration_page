@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../logic/email_logic.dart';
-import '../widgets/ready_text.dart';
-import '../widgets/regist_text.dart';
-import '../widgets/with_google.dart';
-import 'widgets/error_text.dart';
-
-import 'widgets/login_button.dart';
-
-class EmailPage extends StatefulWidget {
-  const EmailPage({super.key});
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
 
   @override
-  State<EmailPage> createState() => _EmailPageState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
-class _EmailPageState extends State<EmailPage> {
+class _LoginFormState extends State<LoginForm> {
   bool _selectedEmail = true;
   bool _selectedPass = true;
 
@@ -26,12 +18,9 @@ class _EmailPageState extends State<EmailPage> {
   String incorrectText = '';
   String text = "Show";
 
-  late CustomValidation _validation;
-
   @override
   void initState() {
     super.initState();
-    _validation = CustomValidation();
   }
 
   @override
@@ -45,13 +34,31 @@ class _EmailPageState extends State<EmailPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: BackButton(),
-                ),
+                const Padding(
+                    padding: EdgeInsets.all(8.0), child: BackButton()),
                 const Image(image: AssetImage("assets/images/appbar.png")),
                 const SizedBox(height: 5),
-                const ReadyText(text1: "Let's ", text2: "Sign In"),
+                const Row(
+                  children: [
+                    SizedBox(width: 24),
+                    Text(
+                      "Let's ",
+                      style: TextStyle(
+                        fontFamily: "Lato",
+                        fontSize: 25,
+                        color: Color(0xff252B5C),
+                      ),
+                    ),
+                    Text(
+                      "Sign In",
+                      style: TextStyle(
+                          fontFamily: "Lato",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Color(0xff252B5C)),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 25),
                 const Padding(
                   padding: EdgeInsets.only(left: 24, bottom: 30),
@@ -64,7 +71,25 @@ class _EmailPageState extends State<EmailPage> {
                   ),
                 ),
                 Center(
-                  child: !initText ? ErrorText(text: incorrectText) : null,
+                  child: !initText
+                      ? Container(
+                          height: 50,
+                          width: 330,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: Color(0xff234F68),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Your $incorrectText is incorrect",
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: "Lato",
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        )
+                      : null,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -81,7 +106,9 @@ class _EmailPageState extends State<EmailPage> {
                           }),
                           onSubmitted: (value) => setState(() {
                             _selectedEmail = true;
-                            errorText = _validation.isValidEmail(value);
+                            errorText =
+                                RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
+                                    .hasMatch(value);
                             initText = errorText;
                           }),
                           decoration: InputDecoration(
@@ -118,8 +145,6 @@ class _EmailPageState extends State<EmailPage> {
                     ),
                   ),
                 ),
-                // EmailField(), //EmailFieldni ishlatish mumkin lekin setstate bo'lyatganda yangilanolmyapti
-                //PasswordField() //PasswordFieldni ishlatish mumkin lekin setstate bo'lyatganda yangilanolmyapti
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Center(
@@ -135,7 +160,9 @@ class _EmailPageState extends State<EmailPage> {
                           }),
                           onSubmitted: (value) => setState(() {
                             _selectedPass = true;
-                            errorText = _validation.isValidPass(value);
+                            errorText = RegExp(
+                              r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$',
+                            ).hasMatch(value);
                             initText = errorText;
                           }),
                           decoration: InputDecoration(
@@ -210,13 +237,108 @@ class _EmailPageState extends State<EmailPage> {
                     ),
                   ],
                 ),
-                // ForgotPass(), bundayam setstate muammo
                 const SizedBox(height: 30),
-                LogInButton(errorText: errorText),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: ElevatedButton(
+                      onPressed: !errorText ? null : () {},
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(300, 70),
+                        backgroundColor: const Color(0xff8BC83F),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              fontFamily: "Lato",
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 20),
-                const WithGoogle(),
+                Column(
+                  children: [
+                    const Text(
+                      "----------------------------------  OR  ----------------------------------",
+                      style: TextStyle(
+                        color: Color(0xffA1A5C1),
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 70,
+                          width: 160,
+                          decoration: const BoxDecoration(
+                            color: Color(0xffF5F4F8),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(25),
+                            ),
+                          ),
+                          child: const Center(
+                            child: Image(
+                              height: 28,
+                              width: 28,
+                              image: AssetImage("assets/icons/google.png"),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 70,
+                          width: 160,
+                          decoration: const BoxDecoration(
+                            color: Color(0xffF5F4F8),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(25),
+                            ),
+                          ),
+                          child: const Center(
+                            child: Image(
+                              height: 28,
+                              width: 28,
+                              image: AssetImage("assets/icons/facebook.png"),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
                 const SizedBox(height: 15),
-                const RegistrText(),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 24,
+                    ),
+                    Text(
+                      "Don’t have an account?  ",
+                      style: TextStyle(
+                        fontFamily: "Lato",
+                        fontSize: 15,
+                        color: Color(0xff252B5C),
+                      ),
+                    ),
+                    Text(
+                      "Register?",
+                      style: TextStyle(
+                          fontFamily: "Lato",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Color(0xff252B5C)),
+                    ),
+                  ],
+                ),
               ],
             ),
           ],
